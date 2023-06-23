@@ -1,0 +1,32 @@
+<nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+  <div class="container-fluid">
+    <!-- Form -->
+    <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
+      <div class="form-group mb-0" [ngClass]="{ 'focused': focus === true }">
+      </div>
+    </form>
+    <!-- User -->
+    <ul class="navbar-nav align-items-center d-none d-md-flex">
+      <li class="nav-item" ngbDropdown placement="bottom-right">
+        <a class="nav-link pr-0" role="button" ngbDropdownToggle>
+          <div class="media align-items-center">
+            <div class="media-body ml-2 d-none d-lg-block">
+              <span class="mb-0 text-sm  font-weight-bold">{{nombre}}</span>
+            </div>
+          </div>
+        </a>
+        <div class="dropdown-menu-arrow dropdown-menu-right" ngbDropdownMenu>
+          <a routerLinkActive="active" [routerLink]="['/user-profile']" class="dropdown-item">
+            <i class="ni ni-single-02"></i>
+            <span>Mi perfil</span>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a (click)="salir()" class="dropdown-item">
+            <i class="ni ni-user-run"></i>
+            <span>Salir</span>
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>

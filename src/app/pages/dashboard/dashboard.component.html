@@ -1,0 +1,312 @@
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center" style="min-height: 250px; background-size: cover; background-position: center top;">
+  <span class="mask bg-gradient-danger opacity-8"></span>
+  <div class="container-fluid bg-gradient-dark">
+  </div>
+</div>
+<div class="container-fluid mt--7" id="reservas">
+  <div class="row ">
+    <div class="col-xl-11 mb-11 mb-xl-1">
+      <div class="card bg-gradient-secondary shadow">
+        <div class="card-header bg-transparent">
+          <div class="row">
+            <div class="col-lg-4">
+              <a style="color: rgb(0, 0, 0);">
+                <img src="http://186.71.211.14:1023/api/api_disfraces/imagenes/brand/carrito.png" style="width: 10%; height: 87%;">&nbsp;
+                Administración de Pedidos</a>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-4">
+
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <h2>Buscador por cédula o estado: </h2>
+                <input type="text" class="form-control form-control-alternative my-4" [(ngModel)]="buscador" (keyup.enter)="buscador_cedula()"  name="buscador" placeholder="Click ENTER para buscar...">
+              </div>
+            </div>
+          </div>
+          <div class="row align-items-center">
+            <table class="table tb table-striped" style="overflow-x: scroll;">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Dias</th>
+                  <th scope="col">Fecha</th>
+                  <th scope="col">Cedula</th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Apellido</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let reserva of reservas">
+                  <th>{{reserva.id_reserva}}</th>
+                  <td>{{reserva.dias}}</td>
+                  <td>{{reserva.fecha}}</td>
+                  <td>{{reserva.cedula}}</td>
+                  <td>{{reserva.nombre}}</td>
+                  <td>{{reserva.apellido}}</td>
+                  <td>{{reserva.estado}}-{{reserva.mantenimiento}}</td>
+                  <td [ngClass]="{ ocultar: nombre1 === 'Disponible' }"><button type="button" (click)="atrapar_id(reserva)" class="btn btn-primary btn-sm">Consultar</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <br>
+</div>
+<div class="container-fluid mt--7 " id="factura">
+  <div class="row ">
+    <div class="col-xl-11 mb-11 mb-xl-1 ">
+      <div class="card bg-gradient-secondary shadow">
+        <div class="card-header bg-transparent">
+          <div class="row align-items-center">
+            <button type="button" class="btn btn-primary my-3" style="width: 110px;" (click)="regresar()">Regresar</button>
+            <br>
+            <br>
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th scope="col">CANT.</th>
+                    <th scope="col" colspan="3">DESCRIPCION</th>
+                    <th scope="col" colspan="1">TALLA</th>
+                    <th scope="col">P.UNITARIO</th>
+                    <th scope="col">V.TOTAL</th>
+                    <th scope="col">ESTADO</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let detalle of detalles">
+                    <td>{{detalle.cantidad}}</td>
+                    <td colspan="3">{{detalle.nombre}}</td>
+                    <td colspan="1">{{detalle.talla}}</td>
+                    <td>{{detalle.precio_dia}}</td>
+                    <td>{{detalle.sub_total}}</td>
+                    <td>
+                      <div class="form-group">
+                        <select class="form-select form-control form-control-alternative" disabled="{{combo_estado}}" [(ngModel)]="detalle.estado" aria-label="Default select example">
+                          <option value="Bueno" (click)="bueno(detalle.id_detalle_reserva)">Bueno</option>
+                          <option value="Mantenimiento" (click)="mantenimiento(detalle.id_detalle_reserva)">Mantenimiento</option>
+                          <option value="Malo" (click)="malo(detalle.id_detalle_reserva)">Malo</option>
+                        </select>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td colspan="4">&nbsp;</td>
+                    <td>SUBTOTAL</td>
+                    <td>{{subtotaliva}}</td>
+                  </tr>
+                  <tr>
+                    <td>PRENDA</td>
+                    <td colspan="3"><input type="text" class="form-control form-control-alternative" [(ngModel)]="prenda" name="prenda" disabled="{{prenda_estado}}"></td>
+                    <td colspan="1"><button type="button" class="btn btn-success" id="btn_prenda" (click)="guardar_prenda()">Guardar</button></td>
+                    <td><select class="form-select form-control form-control-alternative" disabled="true" [(ngModel)]="ivas" aria-label="Default select example">
+                      <option value="IVA 12%" (click)="iva()">IVA 12%</option>
+                    </select></td>
+                    <td>{{iva12}}</td>
+                  </tr>
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td colspan="4">&nbsp;</td>
+                    <td>TOTAL</td>
+                    <td>{{total_final}}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <br>
+              <div class="row align-items-center" id="factura_pdf">
+                <div class="row">
+                  <div class="col-lg-3">
+                    <a class="navbar-brand pt-0" routerLinkActive="active" style="color: rgb(0, 0, 0); text-align: center;">
+                      <h1>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        Factura
+                      </h1>
+                    </a>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-3">
+                    <a class="navbar-brand pt-0" routerLinkActive="active" style="color: rgb(0, 0, 0);">
+                      <h2>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        El Disfraz {{nombre_sur}}
+                      </h2>
+                    </a>
+                  </div>
+                  <div class="col-lg-3">
+                    <a class="navbar-brand pt-0" routerLinkActive="active" style="color: rgb(0, 0, 0);">
+                      <h2>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        RUC:1804362489001
+                      </h2>
+                    </a>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-3">
+                    <a class="navbar-brand pt-0" routerLinkActive="active" style="color: rgb(0, 0, 0); font-style: italic;">
+                      <h4>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        Nosotros hacemos tu idea de disfraz y su ilusión posible.
+                      </h4>
+                    </a>
+                  </div>
+                  <div class="col-lg-3">
+                    <a class="navbar-brand pt-0" routerLinkActive="active" style="color: rgb(0, 0, 0); font-style: italic;">
+                      <h4>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        NUMERO DE PEDIDO
+                      </h4>
+                    </a>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-3">
+                    <a class="navbar-brand pt-0" routerLinkActive="active" style="color: rgb(0, 0, 0); font-style: italic;">
+                      <h4>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        Teléfono: {{telefono_sur}}
+                      </h4>
+                    </a>
+                  </div>
+                  <div class="col-lg-3">
+                    <a class="navbar-brand pt-0" routerLinkActive="active" style="color: rgb(0, 0, 0); font-style: italic;">
+                      <h4>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        N°{{numero}}
+                      </h4>
+                    </a>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-3">
+                    <a class="navbar-brand pt-0" routerLinkActive="active" style="color: rgb(0, 0, 0); font-style: italic;">
+                      <h4>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        Dirección: {{direccion_emp}}
+                      </h4>
+                    </a>
+                  </div>
+                </div>
+                <br>
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th scope="col">Cliente</th>
+                      <th scope="col" colspan="4">{{nombre_u}} {{apellido_u}}</th>
+                      <th scope="col">Fecha</th>
+                      <th scope="col" colspan="7">{{fecha_u}}</th>
+                    </tr>
+                    <tr>
+                      <th scope="col">Cedula</th>
+                      <th scope="col" colspan="1">{{cedula}}</th>
+                      <th scope="col">Teléfono</th>
+                      <th scope="col" colspan="1">{{telefono_usu}}</th>
+                      <th scope="col">Dirección</th>
+                      <th scope="col" colspan="2">{{direccion_usu}}</th>
+                    </tr>
+                    <br>
+                    <tr style="background-color: rgb(69, 168, 168);">
+                      <th scope="col">CANT.</th>
+                      <th scope="col" colspan="3">DESCRIPCION</th>
+                      <th scope="col" colspan="1">TALLA</th>
+                      <th scope="col">P.UNITARIO</th>
+                      <th scope="col">V.TOTAL</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let detalle of detalles">
+                      <td>{{detalle.cantidad}}</td>
+                      <td colspan="3">{{detalle.nombre}}</td>
+                      <td colspan="1">{{detalle.talla}}</td>
+                      <td>{{detalle.precio_dia}}</td>
+                      <td>{{detalle.sub_total}}</td>
+                    </tr>
+                    <tr>
+                      <td>&nbsp;</td>
+                      <td colspan="4">&nbsp;</td>
+                      <td>SUBTOTAL</td>
+                      <td>{{subtotaliva}}</td>
+                    </tr>
+                    <tr>
+                      <td>&nbsp;</td>
+                      <td colspan="4">&nbsp;</td>
+                      <td>IVA 12%</td>
+                      <td>{{iva12}}</td>
+                    </tr>
+                    <tr>
+                      <td>&nbsp;</td>
+                      <td colspan="4">&nbsp;</td>
+                      <td>TOTAL</td>
+                      <td>{{total_final}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="row align-items-center" style="text-align: center;">
+                <div class="col-lg-2">
+                  <div class="form-group" >
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleVerticallycenteredModal" id="btn_foto">Comprobante</button>
+                    <div class="modal fade" id="exampleVerticallycenteredModal" tabindex="-1" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title">Comprobante de pago</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body"><img src="http://186.71.211.14:1023/api/api_disfraces/comprobantes/{{imagen}}" style="width: 400px; height: 400px;"></div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <div class="row align-items-center" style="text-align: center;">
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <button type="button" class="btn btn-primary" id="btn_reenviar" (click)="reenviar()" >Reenviar comprobante</button>
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <button type="button" class="btn btn-success" id="btn_aprobado" (click)="aprobar()">Aprobar</button>
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <button type="button" class="btn btn-danger" id="btn_cancelado" (click)="cancelar()">Cancelar</button>
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <button type="button" class="btn btn-info" id="btn_finalizado" (click)="finalizar()" >Finalizar</button>
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <button type="button" class="btn btn-info" id="btn_reporte" (click)="pdf()" >Imprimir</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br><br>
+</div>

@@ -1,0 +1,140 @@
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center" style="min-height: 250px; background-size: cover; background-position: center top;">
+  <span class="mask bg-gradient-danger opacity-8"></span>
+  <div class="container-fluid bg-gradient-dark">
+  </div>
+</div>
+
+<div class="container-fluid mt--7" id="empleados">
+  <div class="row">
+    <div class="col-xl-11 mb-11 mb-xl-1">
+      <div class="card bg-gradient-secondary shadow">
+        <div class="card-header bg-transparent">
+          <div class="row">
+            <div class="col-lg-4">
+              <a style="color: rgb(0, 0, 0);">
+                <img src="http://186.71.211.14:1023/api/api_disfraces/imagenes/brand/empleados.png" style="width: 10%; height: 87%;">&nbsp;
+                Administración de Empleados</a>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-4">
+              <div class="form-group">
+                <button type="button" class="btn btn-primary my-4" id="guardar" (click)="nuevo()">NUEVO</button>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <h2>Buscador por cédula:</h2>
+                <input type="text" class="form-control form-control-alternative my-4" [(ngModel)]="buscador" (keyup.enter)="buscador_empleados()" name="buscador" placeholder="Click ENTER para buscar...">
+              </div>
+            </div>
+          </div>
+          <div class="row align-items-center">
+            <table class="table tb table-striped" style="overflow-x: scroll;">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">nombre</th>
+                  <th scope="col">apellido</th>
+                  <th scope="col">cedula</th>
+                  <th scope="col">cargo</th>
+                  <th scope="col">sucursal</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let empleado of empleados">
+                  <th>{{empleado.id_empleado}}</th>
+                  <td>{{empleado.nombre}}</td>
+                  <td>{{empleado.apellido}}</td>
+                  <td>{{empleado.cedula}}</td>
+                  <td>{{empleado.cargo}}</td>
+                  <td>{{empleado.nombre_sucursal}}</td>
+                  <td><button type="button" (click)="atrapar_id(empleado)" class="btn btn-primary btn-sm">Actualizar</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7 " style="height: 75%; width: 75%;" id="formulario_empleados">
+  <!-- Table -->
+  <div class="row ">
+    <div class="col ">
+      <div class="card shadow" >
+        <div class="card-header bg-transparent">
+          <h3 class="mb-0">Crear Empleado</h3>
+        </div>
+        <div class="card-body">
+          <form>
+            <div class="pl-lg-4" disabled="false">
+              <div class="row">
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label class="form-control-label">NOMBRE</label>
+                    <input type="text" onkeydown="return /[áéíóúÁÉÍÓÚa-zA-Zñ]/i.test(event.key)" class="form-control form-control-alternative" [(ngModel)]="nombre" name="nombre" >
+                  </div>
+                </div>
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label class="form-control-label">APELLIDO</label>
+                    <input type="text" onkeydown="return /[áéíóúÁÉÍÓÚa-zA-Zñ]/i.test(event.key)" class="form-control form-control-alternative" name="apellido" [(ngModel)]="apellido" >
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-3">
+                  <div class="form-group">
+                    <label class="form-control-label">CEDULA</label>
+                    <input class="form-control form-control-alternative" maxlength="10" (change)="control_cedula(cedula)" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" name="cedula" [(ngModel)]="cedula" type="text">
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <label class="form-control-label">CARGO</label>
+                    <div class="dropdown">
+                      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{cargo}}
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" (click)="cambiar_cargo('admin')">Admin</a></li>
+                        <li><a class="dropdown-item" (click)="cambiar_cargo('empleado')">Empleado</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-3">
+                  <div class="form-group">
+                    <label class="form-control-label">SUCURSAL</label>
+                    <div class="dropdown mt-0">
+                      <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        {{nombre_sucursal}} - {{ciudad}}
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li *ngFor="let sucursal of sucursales"><a class="dropdown-item" (click)="click_sucursales(sucursal)">{{sucursal.nombre_sucursal}} - {{sucursal.ciudad}}</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-3">
+                  <div class="form-group">
+                    <label class="form-control-label">CONTRASEÑA</label>
+                    <input class="form-control form-control-alternative" name="clave" [(ngModel)]="clave" type="text"  >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <hr>
+          <div class="text-center">
+            <button type="button" class="btn btn-primary my-4" id="guardar" (click)="guardar_empleado()">GUARDAR</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,386 @@
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center" style="min-height: 250px; background-size: cover; background-position: center top;">
+  <span class="mask bg-gradient-danger opacity-8"></span>
+  <div class="container-fluid bg-gradient-dark">
+  </div>
+</div>
+<div class="container-fluid mt--7 " id="productos">
+  <div class="row">
+    <div class="col-xl-12 mb-12 mb-xl-1">
+      <div class="card bg-gradient-secondary shadow">
+        <div class="card-header bg-transparent">
+          <div class="row">
+            <div class="col-lg-4">
+              <a style="color: rgb(0, 0, 0);">
+                <img src="http://186.71.211.14:1023/api/api_disfraces/imagenes/brand/productos.png" style="width: 10%; height: 87%;">&nbsp;
+                Administración de Productos</a>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-1">
+              <div class="form-group">
+                <button type="button" class="btn btn-primary my-4" id="guardar" (click)="nuevo()">NUEVO</button>
+              </div>
+            </div>
+            <div class="col-lg-2">
+              <div class="form-group">
+                <button type="button" class="btn btn-primary my-4" id="guardar" data-bs-toggle="modal" data-bs-target="#reportes">REPORTES</button>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <h2>Buscador por nombre:</h2>
+                <input type="text" class="form-control form-control-alternative my-4" [(ngModel)]="buscador" (keyup.enter)="buscador_productos()" name="buscador" placeholder="Click ENTER para buscar...">
+              </div>
+            </div>
+          </div>
+
+          <div class="row align-items-center">
+            <table class="table tb table-striped table-responsive" style="overflow-x: auto;">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Nombre</th>
+                  <th>Descripcion</th>
+                  <th><a>Precio <br> Día</a></th>
+                  <th>Stock</th>
+                  <th>Talla</th>
+                  <th>Piezas</th>
+                  <th>Codigo</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let producto of productos">
+                  <th>{{producto.id_producto}}</th>
+                  <td><textarea disabled style="border: none; outline: none; background-color: transparent; width: 75PX; height: auto;">{{producto.nombre}}</textarea></td>
+                  <td><textarea disabled style="border: none; outline: none; background-color: transparent;">{{producto.descripcion}}</textarea></td>
+                  <td>{{producto.precio_dia}}</td>
+                  <td>{{producto.stock}}</td>
+                  <td>{{producto.talla}}</td>
+                  <td>{{producto.piezas}}</td>
+                  <td>{{producto.total}}</td>
+                  <td style="font-size: 8;">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                      <button type="button" (click)="atrapar_id(producto)" class="btn btn-primary btn-sm">Actualizar</button>
+                      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleVerticallycenteredModal" (click)="consultar_imagenes(producto)">Imagen</button>
+                      <div class="modal fade" id="exampleVerticallycenteredModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title">Gestor de imagenes</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
+                                <div class="carousel-inner">
+                                  <div class="carousel-item active" data-bs-interval="5000" *ngFor="let imagen of imagenes">
+                                    <img src="http://186.71.211.14:1023/api/api_disfraces/imagenes/{{imagen.detalle}}" class="d-block w-100" alt="..." style="height: 300px; width: 100px">
+                                    <div class="carousel-caption d-none d-md-block">
+                                      <h3>{{imagen.descripcion}}</h3>
+                                    </div>
+                                  </div>
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+                                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                  <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+                                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                  <span class="visually-hidden">Next</span>
+                                </button>
+                              </div>
+                              <div class="row">
+                                <div class="col-lg-10">
+                                  <div class="form-group">
+                                    <label class="form-control-label">ACTUALIZAR IMAGEN DE PORTADA</label>
+                                    <input class="form-control form-control-alternative" (change)="get($event)" (change)="actualizar_imagen(producto)" type="file">
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-lg-10">
+                                  <div class="form-group">
+                                    <label class="form-control-label">AGREGAR IMAGEN</label>
+                                    <input class="form-control form-control-alternative" (change)="get($event)" (change)="insertar_imagen_2(producto)" type="file">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="modal fade" id="reportes" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Reportes</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+
+                    <div class="row">
+                      <div class="col-lg-10">
+                        <div class="form-group">
+                          &nbsp;&nbsp;&nbsp;
+                          <input type="radio" class="btn-check" name="options" id="option1"  autocomplete="off">
+                          <label class="btn btn-secondary" for="option1" (click)="consultar_productos_malos()">DADOS DE BAJA</label>
+
+                          <input type="radio" class="btn-check" name="options" id="option2"  autocomplete="off">
+                          <label class="btn btn-secondary" for="option2" (click)="consultar_productos_general()">GENERAL</label>
+                          <br>
+                          &nbsp;&nbsp;&nbsp;
+                          <input type="radio" class="btn-check" name="options" id="option3"  autocomplete="off">
+                          <label class="btn btn-secondary" for="option3" (click)="consultar_productos_rentados()">EN USO</label>
+                          <input type="radio" class="btn-check" name="options" id="option4"  autocomplete="off">
+                          <label class="btn btn-secondary" for="option4" (click)="consultar_productos_habilitados()">DISPONIBLES</label>
+                          <br>
+                          &nbsp;&nbsp;&nbsp;
+                          <input type="radio" class="btn-check" name="options" id="option5"  autocomplete="off">
+                          <label class="btn btn-secondary" for="option5" (click)="consultar_productos_mantenimiento()">MANTENIMIENTO</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="pdf()">IMPRIMIR</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="container-fluid" id="reporte_general">
+              <div class="row">
+                <div class="col-lg-3">
+                  <a class="navbar-brand pt-0" routerLinkActive="active" style="color: rgb(0, 0, 0);">
+                    <img src="http://186.71.211.14:1023/api/api_disfraces/imagenes/brand/El Disfraz.png" alt="" style="width: 50px; height: 50px;">
+                    El Disfraz
+                  </a>
+                </div>
+                <div class="col-lg-3">
+                  <a class="navbar-brand pt-0" routerLinkActive="active" style="color: rgb(0, 0, 0); text-align: center;">
+                    Reporte general de disfraces
+                  </a>
+                </div>
+              </div>
+              <table class="table tb table-striped table-responsive" style="overflow-x: auto;" id="reporte1">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th><a>Precio <br> Día</a></th>
+                    <th>Stock</th>
+                    <th>Talla</th>
+                    <th>Piezas</th>
+                    <th>Sucursal</th>
+                    <th>Codigo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let producto of productos_general">
+                    <th>{{producto.id_producto}}</th>
+                    <td>{{producto.nombre}}</td>
+                    <td>{{producto.precio_dia}}</td>
+                    <td>{{producto.stock}}</td>
+                    <td>{{producto.talla}}</td>
+                    <td>{{producto.piezas}}</td>
+                    <td>{{producto.nombre_sucursal}}</td>
+                    <td>{{producto.total}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="container-fluid" id="reporte_malo">
+              <div class="row">
+                <div class="col-lg-3">
+                  <a class="navbar-brand pt-0" routerLinkActive="active" style="color: rgb(0, 0, 0);">
+                    <img src="http://186.71.211.14:1023/api/api_disfraces/imagenes/brand/El Disfraz.png" alt="" style="width: 50px; height: 50px;">
+                    El Disfraz
+                  </a>
+                </div>
+                <div class="col-lg-3">
+                  <a class="navbar-brand pt-0" routerLinkActive="active" style="color: rgb(0, 0, 0); text-align: center;">
+                    Reporte de disfraces dados de baja
+                  </a>
+                </div>
+              </div>
+              <table class="table tb table-striped table-responsive" style="overflow-x: auto;" id="reporte2">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Descripcion</th>
+                    <th><a>Precio <br> Día</a></th>
+                    <th>Cantidad</th>
+                    <th>Talla</th>
+                    <th>Piezas</th>
+                    <th>Estado</th>
+                    <th>Codigo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let producto of productos_malos">
+                    <th>{{producto.id_producto}}</th>
+                    <td>{{producto.nombre}}</td>
+                    <td>{{producto.descripcion}}</td>
+                    <td>{{producto.precio_dia}}</td>
+                    <td>{{producto.cantidad}}</td>
+                    <td>{{producto.talla}}</td>
+                    <td>{{producto.piezas}}</td>
+                    <td>{{producto.estado}}</td>
+                    <td>{{producto.total}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="container-fluid" id="reporte_uso">
+              <div class="row">
+                <div class="col-lg-3">
+                  <a class="navbar-brand pt-0" routerLinkActive="active" style="color: rgb(0, 0, 0);">
+                    <img src="http://186.71.211.14:1023/api/api_disfraces/imagenes/brand/El Disfraz.png" alt="" style="width: 50px; height: 50px;">
+                    El Disfraz
+                  </a>
+                </div>
+                <div class="col-lg-3">
+                  <a class="navbar-brand pt-0" routerLinkActive="active" style="color: rgb(0, 0, 0); text-align: center;">
+                    Reporte de disfraces en uso
+                  </a>
+                </div>
+              </div>
+              <table class="table tb table-striped table-responsive" style="overflow-x: auto;" id="reporte3">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Descripcion</th>
+                    <th><a>Precio <br> Día</a></th>
+                    <th>Cantidad</th>
+                    <th>Talla</th>
+                    <th>Piezas</th>
+                    <th>Codigo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let producto of productos_malos">
+                    <th>{{producto.id_producto}}</th>
+                    <td>{{producto.nombre}}</td>
+                    <td>{{producto.descripcion}}</td>
+                    <td>{{producto.precio_dia}}</td>
+                    <td>{{producto.cantidad}}</td>
+                    <td>{{producto.talla}}</td>
+                    <td>{{producto.piezas}}</td>
+                    <td>{{producto.total}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7" style="height: 75%; width: 75%;" id="formulario_productos">
+  <!-- Table -->
+  <div class="row">
+    <div class="col">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <button type="button" class="btn btn-primary my-4" id="guardar" (click)="regresar()">REGRESAR</button>
+          <h3 class="mb-0">Crear Producto</h3>
+        </div>
+        <div class="card-body">
+          <form>
+            <div class="pl-lg-4" disabled="false">
+              <div class="row">
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label class="form-control-label">NOMBRE</label>
+                    <input type="text" class="form-control form-control-alternative" [(ngModel)]="nombre" name="nombre" >
+                  </div>
+                </div>
+                <div class="col-lg-5">
+                  <div class="form-group">
+                    <label class="form-control-label">DESCRIPCION</label>
+                    <textarea type="text"  class="form-control form-control-alternative" [(ngModel)]="descripcion" name="descripcion" ></textarea>
+                  </div>
+                </div>
+                <div class="col-lg-3">
+                  <div class="form-group">
+                    <label class="form-control-label">CATEGORIA</label>
+                    <select class="form-select form-control form-control-alternative" [(ngModel)]="categorias" aria-label="Default select example">
+                      <option value="Disfraces mujeres">Disfraces mujeres</option>
+                      <option selected value="Disfraces hombres">Disfraces hombres</option>
+                      <option value="Disfraces niños">Disfraces niños</option>
+                      <option value="Disfraces autóctonos">Disfraces autóctonos</option>
+                      <option value="Accesorios">Accesorios</option>
+                      <option value="Disfraces cosplay">Disfraces cosplay</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <label class="form-control-label">STOCK</label>
+                    <input class="form-control form-control-alternative" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" [(ngModel)]="stock" name="stock" type="text">
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <label class="form-control-label">TALLA</label>
+                    <select class="form-select form-control form-control-alternative" [(ngModel)]="talla" aria-label="Default select example">
+                      <option (click)="consulta_talla()" value="XS">XS</option>
+                      <option (click)="consulta_talla()" value="S">S</option>
+                      <option (click)="consulta_talla()" value="M">M</option>
+                      <option (click)="consulta_talla()" value="L">L</option>
+                      <option (click)="consulta_talla()" value="XL">XL</option>
+                      <option (click)="consulta_talla()" value="UNICA">UNICA</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-lg-3">
+                  <div class="form-group">
+                    <label class="form-control-label">PRECIO POR DIA</label>
+                    <input type="text" class="form-control form-control-alternative" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" [(ngModel)]="p_dia" name="p_dia" >
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <label class="form-control-label">CODIGO</label>
+                    <input class="form-control form-control-alternative" disabled="{{codigo_esetado}}" (keyup)="control_producto()" [(ngModel)]="total" name="total" type="text"  >
+                  </div>
+                </div>
+                <div class="col-lg-2">
+                  <div class="form-group">
+                    <label class="form-control-label">PIEZAS</label>
+                    <input class="form-control form-control-alternative" maxlength="2" onKeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" [(ngModel)]="piezas" name="piezas" type="text"  >
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-7">
+                  <div class="form-group">
+                    <label class="form-control-label">IMAGEN DE PORTADA</label>
+                    <input class="form-control form-control-alternative" (change)="get($event)" type="file">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <hr>
+          <div class="text-center">
+            <button type="button" class="btn btn-primary my-4" id="guardar" (click)="guardar_producto()">GUARDAR</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

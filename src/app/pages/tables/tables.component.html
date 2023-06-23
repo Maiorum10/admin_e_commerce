@@ -1,0 +1,260 @@
+<div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center" style="min-height: 250px; background-size: cover; background-position: center top;">
+  <span class="mask bg-gradient-danger opacity-8"></span>
+  <div class="container-fluid bg-gradient-dark">
+  </div>
+</div>
+<div class="container-fluid mt--7 " id="sucursal">
+  <div class="row ">
+    <div class="col-xl-11 mb-11 mb-xl-1 ">
+      <div class="card bg-gradient-secondary shadow">
+        <div class="card-header bg-transparent">
+          <div class="row">
+            <div class="col-lg-4">
+              <a style="color: rgb(0, 0, 0);">
+                <img src="http://186.71.211.14:1023/api/api_disfraces/imagenes/brand/sucursales.png" style="width: 10%; height: 87%;">&nbsp;
+                Administración de Sucursales</a>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-4">
+              <div class="form-group">
+                <button type="button" class="btn btn-primary my-4" id="guardar" (click)="nuevo()">NUEVO</button>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="form-group">
+                <h2>Buscador por nombre:</h2>
+                <input type="text" class="form-control form-control-alternative my-4" [(ngModel)]="buscador" (keyup.enter)="buscador_sucursal()" name="buscador" placeholder="Click ENTER para buscar...">
+              </div>
+            </div>
+          </div>
+          <div class="row align-items-center">
+            <table class="table tb table-striped table-responsive" style="overflow-x: auto;">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Dirección</th>
+                  <th scope="col">Teléfono</th>
+                  <th scope="col">Cuenta</th>
+                  <th scope="col">Ciudad</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let sucursal of sucursales" ngClass="">
+                  <th>{{sucursal.id_sucursal}}</th>
+                  <td>{{sucursal.nombre_sucursal}}</td>
+                  <td><textarea disabled style="border: none; outline: none; background-color: transparent;">{{sucursal.direccion_dos}}</textarea></td>
+                  <td>{{sucursal.telefono}}</td>
+                  <td><textarea disabled style="border: none; outline: none; background-color: transparent;">{{sucursal.cuenta}}</textarea></td>
+                  <td>{{sucursal.ciudad}}</td>
+                  <td id="btn_reporte" [ngClass]="{ ocultar: sucursal.id_sucursal !== id_tienda, mostrar: rol === 'Gerente'}">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                      <button type="button" (click)="atrapar_id(sucursal)" class="btn btn-primary btn-sm">Actualizar</button>
+                      <button type="button" class="btn btn-primary" data-bs-toggle="modal" (click)="atrapar_id_reportes(sucursal)" data-bs-target="#exampleVerticallycenteredModal">Reportes</button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="modal fade" id="exampleVerticallycenteredModal" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Seleccione Fecha del reporte</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col-lg-10">
+                        <div class="form-group">
+                          <label class="form-control-label">SELECCIONE FECHA</label>
+                          <input class="form-control form-control-alternative" type="date" [(ngModel)]="fecha_r" name="fehca_r">
+                        </div>
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                      <div class="col-lg-10">
+                        <div class="form-group">
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          <input type="radio" class="btn-check" name="options" id="option1" (click)="trans_fecha()" autocomplete="off">
+                          <label class="btn btn-secondary" for="option1">CONSULTAR</label>
+
+                          <input type="radio" class="btn-check" name="options" id="option2" (click)="consulta_general()" autocomplete="off">
+                          <label class="btn btn-secondary" for="option2">GENERAL</label>
+                          <br>
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          <input type="radio" class="btn-check" name="options" id="option3" (click)="consulta_mas_vendido()" autocomplete="off">
+                          <label class="btn btn-secondary" for="option3">DEL MAS AL MENOS ALQUILADO</label>
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          <input type="radio" class="btn-check" name="options" id="option4" (click)="reportes_diarios()" autocomplete="off">
+                          <label class="btn btn-secondary" for="option4">DIARIO</label>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="pdf()">Imprimir</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row align-items-center" id="pdf">
+            <div class="row">
+              <div class="col-lg-3">
+                <a class="navbar-brand pt-0" routerLinkActive="active" style="color: rgb(0, 0, 0);">
+                  <img src="http://186.71.211.14:1023/api/api_disfraces/imagenes/brand/El Disfraz.png" alt="" style="width: 50px; height: 50px;">
+                  El Disfraz
+                </a>
+              </div>
+              <div class="col-lg-3">
+                <a class="navbar-brand pt-0" routerLinkActive="active" style="color: rgb(0, 0, 0); text-align: center;">
+                  Reporte de renta de disfraces
+                </a>
+              </div>
+            </div>
+            <table class="table tb table-striped table-responsive">
+              <thead>
+                <tr>
+                  <th scope="col">Fecha</th>
+                  <th scope="col">Cedula</th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Apellido</th>
+                  <th scope="col">Producto</th>
+                  <th scope="col">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let informe of informes">
+                  <th>{{informe.fecha}}</th>
+                  <td>{{informe.cedula}}</td>
+                  <td>{{informe.nombre}}</td>
+                  <td>{{informe.apellido}}</td>
+                  <td><textarea disabled style="border: none; outline: none; background-color: transparent;">{{informe.nombre_p}}-{{informe.talla}}</textarea></td>
+                  <td>{{informe.sub_total}}</td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                  <td colspan="3">&nbsp;</td>
+                  <td>TOTAL</td>
+                  <td>{{total}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="row align-items-center" id="pdf2">
+            <div class="row">
+              <div class="col-lg-3">
+                <a class="navbar-brand pt-0" routerLinkActive="active" style="color: rgb(0, 0, 0);">
+                  <img src="http://186.71.211.14:1023/api/api_disfraces/imagenes/brand/El Disfraz.png" alt="" style="width: 50px; height: 50px;">
+                  El Disfraz
+                </a>
+              </div>
+              <div class="col-lg-3">
+                <a class="navbar-brand pt-0" routerLinkActive="active" style="color: rgb(0, 0, 0); text-align: center;">
+                  Reporte de renta de disfraces
+                </a>
+              </div>
+            </div>
+            <table class="table tb table-striped table-responsive">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col"><a>Precio <br> Día</a></th>
+                  <th scope="col">Stock</th>
+                  <th scope="col">Talla</th>
+                  <th scope="col">Piezas</th>
+                  <th scope="col">Codigo</th>
+                  <th scope="col">°N de alquilo</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let informe2 of informes2">
+                  <th>{{informe2.id_producto}}</th>
+                  <td>{{informe2.nombre_p}}</td>
+                  <td>{{informe2.precio_dia}}</td>
+                  <td>{{informe2.stock}}</td>
+                  <td>{{informe2.talla}}</td>
+                  <td>{{informe2.piezas}}</td>
+                  <td>{{informe2.total}}</td>
+                  <td>{{informe2.contador}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Page content -->
+<div class="container-fluid mt--7 " style="height: 75%; width: 75%; " id="formulario_sucursal">
+  <!-- Table -->
+  <div class="row ">
+    <div class="col ">
+      <div class="card shadow">
+        <div class="card-header bg-transparent">
+          <button type="button" class="btn btn-primary my-4" id="guardar" (click)="regresar()">REGRESAR</button>
+          <h3 class="mb-0">Crear Sucursal</h3>
+        </div>
+        <div class="card-body">
+          <form>
+            <div class="pl-lg-4" disabled="false">
+              <div class="row">
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label class="form-control-label">Nombre</label>
+                    <input type="text" class="form-control form-control-alternative" [(ngModel)]="nombre" name="nombre" >
+                  </div>
+                </div>
+                <div class="col-lg-5">
+                  <div class="form-group">
+                    <label class="form-control-label">Dirección</label>
+                    <input type="text" class="form-control form-control-alternative" [(ngModel)]="direccion_dos" name="direccion_dos" >
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label class="form-control-label">Teléfono</label>
+                    <input type="text" class="form-control form-control-alternative" [(ngModel)]="telefono" name="telefono" >
+                  </div>
+                </div>
+                <div class="col-lg-5">
+                  <div class="form-group">
+                    <label class="form-control-label">Cuenta</label>
+                    <input type="text" class="form-control form-control-alternative" [(ngModel)]="cuenta" name="cuenta" >
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label class="form-control-label">Ciudad</label>
+                    <input type="text" class="form-control form-control-alternative" [(ngModel)]="ciudad" name="ciudad" >
+                  </div>
+                </div>
+                <div class="col-lg-5">
+                  <div class="form-group">
+                    <label class="form-control-label">URL</label>
+                    <input type="text" class="form-control form-control-alternative" [(ngModel)]="direccion" name="direccion" >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          <hr>
+          <div class="text-center">
+            <button type="button" class="btn btn-primary my-4" id="guardar" (click)="guardar_sucursal()">GUARDAR</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
